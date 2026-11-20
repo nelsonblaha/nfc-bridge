@@ -19,7 +19,8 @@ nfcb.py ── adb forward ──► 127.0.0.1:47800  NFC Bridge ── reader m
 ```
 
 - While the app is on screen, Android delivers every tag to it (reader mode),
-  instead of the normal tag dispatch.
+  instead of the normal tag dispatch. The platform's tag tone is off in the app;
+  a short vibration confirms each read.
 - The app serves newline-delimited JSON on **127.0.0.1:47800 only**. The
   computer reaches it with `adb forward tcp:47800 tcp:47800`.
 - **Authentication:** each launch writes a random 128-bit token to the app's

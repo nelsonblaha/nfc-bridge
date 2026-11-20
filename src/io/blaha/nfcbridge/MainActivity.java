@@ -116,7 +116,8 @@ public class MainActivity extends Activity implements NfcAdapter.ReaderCallback 
         nfc.enableReaderMode(this, this,
                 NfcAdapter.FLAG_READER_NFC_A | NfcAdapter.FLAG_READER_NFC_B
                         | NfcAdapter.FLAG_READER_NFC_F | NfcAdapter.FLAG_READER_NFC_V
-                        | NfcAdapter.FLAG_READER_NFC_BARCODE,
+                        | NfcAdapter.FLAG_READER_NFC_BARCODE
+                        | NfcAdapter.FLAG_READER_NO_PLATFORM_SOUNDS,
                 opts);
     }
 
@@ -136,6 +137,7 @@ public class MainActivity extends Activity implements NfcAdapter.ReaderCallback 
     @Override
     public void onTagDiscovered(Tag tag) {
         bridge.onTag(tag);
+        buzz(40); // the platform tone is off (FLAG_READER_NO_PLATFORM_SOUNDS); a tick confirms the read
         addLog("tag " + Bridge.hex(tag.getId()));
     }
 
@@ -145,9 +147,13 @@ public class MainActivity extends Activity implements NfcAdapter.ReaderCallback 
 
     void showPrompt(final String text) {
         runOnUiThread(() -> prompt.setText(text));
+        buzz(120);
+    }
+
+    private void buzz(long ms) {
         try {
             Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-            if (v != null) v.vibrate(VibrationEffect.createOneShot(120, VibrationEffect.DEFAULT_AMPLITUDE));
+            if (v != null) v.vibrate(VibrationEffect.createOneShot(ms, VibrationEffect.DEFAULT_AMPLITUDE));
         } catch (Exception ignored) {
         }
     }
